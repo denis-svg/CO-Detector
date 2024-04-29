@@ -9,9 +9,6 @@ TelegramBot::TelegramBot(MQ7Sensor& mq7, String BOT_TOKEN, WiFiClientSecure &sec
 }
 
 void TelegramBot::tick(){
-    if (mq7_sensor->getPPM() > 20){
-        alert();
-    }
     int numNewMessages = bot.getUpdates(bot.last_message_received + 1);
     while (numNewMessages)
     {
@@ -56,6 +53,12 @@ void TelegramBot::handleNewMessages(int numNewMessages){
             bot.sendMessage(chat_id, "Succesfully unsubscribed to this chat.\n", "Markdown");
         }
         }
+        if (text == "/status"){
+            String numberAsString = String(mq7_sensor->getPPM());
+            String message = "The ppm of CO in the room is ";
+            message.concat(numberAsString);
+            bot.sendMessage(chat_id, message, "Markdown");
+        }
 
         if (text == "/start")
         {
@@ -69,7 +72,7 @@ void TelegramBot::handleNewMessages(int numNewMessages){
     }
 }
 
-void TelegramBot::alert(){
+void TelegramBot::alert(int ppm){
     for (const auto& pair : chats) {
         String chat_id = pair.first;
         bot.sendMessage(chat_id, "ALLERT THERE IS A HIGH CONCENTRATION OF CO!!!\n", "Markdown");

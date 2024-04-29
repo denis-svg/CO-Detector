@@ -10,9 +10,9 @@ class TelegramBot{
 public:
     TelegramBot(MQ7Sensor& mq7, String BOT_TOKEN, WiFiClientSecure &secured_client);
     void tick();
+    void alert(int ppm);
 private:
     void handleNewMessages(int numNewMessages);
-    void alert();
     MQ7Sensor* mq7_sensor;
     std::map<String, char> chats;
     WiFiClientSecure* secured_client;

@@ -6,6 +6,7 @@
 #define WIFI_PASSWORD "12345678"
 // Telegram BOT Token (Get from Botfather)
 #define BOT_TOKEN "6997061084:AAFeIqDFbySFbdmjx4PhvU188GvOah4HUwc"
+#define WARNING_PPM 10
 
 X509List cert(TELEGRAM_CERTIFICATE_ROOT);
 MQ7Sensor mq7;
@@ -22,6 +23,10 @@ void setup()
 
 void loop()
 {
+  int ppm = mq7.getPPM();
+  if (ppm > WARNING_PPM){
+    bot.alert(ppm);
+  }
   bot.tick();
   delay(60);
 }
