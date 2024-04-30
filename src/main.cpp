@@ -9,7 +9,10 @@
 #define WARNING_PPM 10
 
 X509List cert(TELEGRAM_CERTIFICATE_ROOT);
-MQ7Sensor mq7;
+int pinIN = A0,  pinMOSFET=D5, pinButton=D7, pinBuzzer=D4, pinLED=D6, maxVoltage=5, bitRes=1023;
+
+MQ7Sensor mq7(pinIN, pinMOSFET, pinButton, pinBuzzer, pinLED,
+             maxVoltage, bitRes);
 WiFiManager wifi(cert);
 TelegramBot bot(mq7, BOT_TOKEN, wifi.getClient());
 
@@ -23,10 +26,10 @@ void setup()
 
 void loop()
 {
-  int ppm = mq7.getPPM();
+  int ppm = mq7.ppm;
   if (ppm > WARNING_PPM){
-    bot.alert(ppm);
+    //bot.alert(ppm);
   }
-  bot.tick();
-  delay(60);
+  //bot.tick();
+  mq7.tick();
 }

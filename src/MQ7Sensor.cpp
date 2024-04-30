@@ -19,7 +19,7 @@ void MQ7Sensor::print_sensor() {
     return;
 
   int sensorValue = analogRead(pinIN);
-  Serial.print("sensor:");
+  Serial.print(">sensor:");
   Serial.println(sensorValue);
   prev_t = t;
 }
@@ -33,7 +33,7 @@ void MQ7Sensor::cycle_voltage() {
     return;
   high = !high;
   digitalWrite(pinMOSFET, high ? HIGH : LOW);
-  Serial.print("sensor:");
+  Serial.print(">sensor:");
   Serial.println(1023); // draw a line on the plot to show transition
 
   if (high) { // just transitioned to HIGH, last value shows true PPM

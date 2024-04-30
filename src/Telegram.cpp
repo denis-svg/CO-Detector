@@ -54,7 +54,7 @@ void TelegramBot::handleNewMessages(int numNewMessages){
         }
         }
         if (text == "/status"){
-            String numberAsString = String(mq7_sensor->getPPM());
+            String numberAsString = String(mq7_sensor->ppm);
             String message = "The ppm of CO in the room is ";
             message.concat(numberAsString);
             bot.sendMessage(chat_id, message, "Markdown");

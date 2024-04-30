@@ -9,6 +9,8 @@ private:
   void cycle_voltage();
 
 public:
+ int pinIN; int pinMOSFET; int pinButton; int pinBuzzer;
+                     int pinLED; int maxVoltage; int bitRes;
   MQ7Sensor(int pinIN, int pinMOSFET, int pinButton, int pinBuzzer, int pinLED,
             int maxVoltage, int bitRes);
   void tick();
