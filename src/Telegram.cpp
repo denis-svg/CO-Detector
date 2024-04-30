@@ -32,17 +32,17 @@ void TelegramBot::handleNewMessages(int numNewMessages){
         from_name = "Guest";
 
         if (text == "/subscribe"){
-        if ( !(chats.find(chat_id) != chats.end()) ){
-            if (chats.size() > 10){
-            bot.sendMessage(chat_id, "Cannot subscribe since I am subscribed to too many chats\n", "Markdown");
+            if ( !(chats.find(chat_id) != chats.end()) ){
+                if (chats.size() > 10){
+                bot.sendMessage(chat_id, "Cannot subscribe since I am subscribed to too many chats\n", "Markdown");
+                }
+                else{
+                chats[chat_id] = 'T'; // the values assigned to the chat's id doesnt matter
+                bot.sendMessage(chat_id, "Succesfully subscribed to this chat.\n", "Markdown");
+                }
+            }else{
+                bot.sendMessage(chat_id, "Already subscribed.\n", "Markdown");
             }
-            else{
-            chats[chat_id] = 'T'; // the values assigned to the chat's id doesnt matter
-            bot.sendMessage(chat_id, "Succesfully subscribed to this chat.\n", "Markdown");
-            }
-        }else{
-            bot.sendMessage(chat_id, "Already subscribed.\n", "Markdown");
-        }
         }
 
         if (text == "/unsubscribe"){
