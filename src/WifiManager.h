@@ -16,7 +16,7 @@ public:
     disconnect();
   }
 
-  bool connect(const char *ssid, const char *password)
+  bool connect(char *ssid, char *password)
   {
     Serial.println();
 
