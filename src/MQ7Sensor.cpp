@@ -8,7 +8,8 @@
 MQ7Sensor::MQ7Sensor(int pinIN, int pinMOSFET, int pinButton, int pinBuzzer,
                      int pinLED, int maxVoltage, int bitRes, void (*alert)(int))
     : pinIN(pinIN), pinMOSFET(pinMOSFET), pinButton(pinButton),
-      pinBuzzer(pinBuzzer), pinLED(pinLED), maxVoltage(maxVoltage), bitRes(bitRes), alert(alert) {
+      pinBuzzer(pinBuzzer), pinLED(pinLED), maxVoltage(maxVoltage), bitRes(bitRes), alert(alert)
+{
   pinMode(pinIN, INPUT);
   pinMode(pinMOSFET, OUTPUT);
   pinMode(pinLED, OUTPUT);
@@ -16,7 +17,8 @@ MQ7Sensor::MQ7Sensor(int pinIN, int pinMOSFET, int pinButton, int pinBuzzer,
   pinMode(pinButton, INPUT_PULLUP);
 }
 
-void MQ7Sensor::print_sensor() {
+void MQ7Sensor::print_sensor()
+{
   static unsigned long prev_t = 0;
 
   unsigned long t = millis();
@@ -29,7 +31,8 @@ void MQ7Sensor::print_sensor() {
   prev_t = t;
 }
 
-void MQ7Sensor::cycle_voltage() {
+void MQ7Sensor::cycle_voltage()
+{
   static bool high = false;
   static unsigned long prev_t = 0;
 
@@ -42,18 +45,22 @@ void MQ7Sensor::cycle_voltage() {
   Serial.print(">sensor:");
   Serial.println(1023); // draw a line on the plot to show transition
   Serial.print("Transitioned to cycle: ");
-  Serial.println(high); 
+  Serial.println(high);
 
-  if (high) { // just transitioned to HIGH, last value shows true PPM
+  if (high)
+  { // just transitioned to HIGH, last value shows true PPM
     // TODO compute ppm from sensor voltage
     ppm = analogRead(pinIN);
-    
-   if (ppm > WARNING_PPM) {
+
+    if (ppm >= WARNING_PPM)
+    {
       Serial.println("high ppm ");
       tone(pinBuzzer, 2000);
       digitalWrite(pinLED, HIGH);
       alert(ppm);
-    } else {
+    }
+    else
+    {
       noTone(pinBuzzer);
       digitalWrite(pinLED, LOW);
     }
@@ -62,11 +69,13 @@ void MQ7Sensor::cycle_voltage() {
   prev_t = t;
 }
 
-void MQ7Sensor::tick() {
+void MQ7Sensor::tick()
+{
   cycle_voltage();
   print_sensor();
 
-  if (digitalRead(pinButton) == HIGH) {
+  if (digitalRead(pinButton) == HIGH)
+  {
     noTone(pinBuzzer);
     digitalWrite(pinLED, LOW);
   }

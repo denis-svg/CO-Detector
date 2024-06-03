@@ -1,34 +1,32 @@
 #include "WifiManager.h"
-#include "Telegram.h"
 #include "MQ7Sensor.h"
-// Wifi network station credentials
+#include "Telegram.h"
+
 #define WIFI_SSID "hostp"
 #define WIFI_PASSWORD "12345678"
-// Telegram BOT Token (Get from Botfather)
 #define BOT_TOKEN "6997061084:AAFeIqDFbySFbdmjx4PhvU188GvOah4HUwc"
-void alert(int ppm);
-X509List cert(TELEGRAM_CERTIFICATE_ROOT);
-int pinIN = A0,  pinMOSFET=D5, pinButton=D7, pinBuzzer=D4, pinLED=D6, maxVoltage=5, bitRes=1023;
 
+int pinIN = 36, pinMOSFET = 19, pinButton = 34, pinBuzzer = 5, pinLED = 18, maxVoltage = 5, bitRes = 1023;
+void alert(int ppm);
+WiFiManager wifi;
 MQ7Sensor mq7(pinIN, pinMOSFET, pinButton, pinBuzzer, pinLED,
-             maxVoltage, bitRes, alert);
-WiFiManager wifi(cert);
+              maxVoltage, bitRes, alert);
 TelegramBot bot(mq7, BOT_TOKEN, wifi.getClient());
 
 void setup()
 {
   Serial.begin(9600);
-  Serial.println();
-
+  wifi.begin();
   wifi.connect(WIFI_SSID, WIFI_PASSWORD);
-}
-
-void alert(int ppm){
-    bot.alert(ppm);
 }
 
 void loop()
 {
-  bot.tick();
   mq7.tick();
+  bot.tick();
+}
+
+void alert(int ppm)
+{
+  bot.alert(ppm);
 }
