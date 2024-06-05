@@ -1,26 +1,27 @@
-#include "WifiManager.h"
 #include "MQ7Sensor.h"
 #include "Telegram.h"
+#include "WifiManager.h"
 #include <BluetoothSerial.h>
 
 #define BOT_TOKEN "6997061084:AAFeIqDFbySFbdmjx4PhvU188GvOah4HUwc"
 
-int pinIN = 36, pinMOSFET = 19, pinButton = 34, pinBuzzer = 5, pinLED = 18, maxVoltage = 5, bitRes = 1023;
+int pinIN = 36, pinMOSFET = 19, pinButton = 34, pinBuzzer = 5, pinLED = 18,
+    maxVoltage = 5, bitRes = 1023;
 void alert(int ppm);
 WiFiManager wifi;
-MQ7Sensor mq7(pinIN, pinMOSFET, pinButton, pinBuzzer, pinLED,
-              maxVoltage, bitRes, alert);
+MQ7Sensor mq7(pinIN, pinMOSFET, pinButton, pinBuzzer, pinLED, maxVoltage,
+              bitRes, alert);
 TelegramBot bot(mq7, BOT_TOKEN, wifi.getClient());
 
 BluetoothSerial SerialBT;
 void readBluetoothInput(const char *prompt, char *input, int inputSize);
 bool restarting = true;
 
-void setup()
-{
+void setup() {
   Serial.begin(9600);
   SerialBT.begin("ESP32-BT");
-  Serial.println("Setup complete. Waiting for WiFi credentials via Bluetooth...");
+  Serial.println(
+      "Setup complete. Waiting for WiFi credentials via Bluetooth...");
 }
 
 void loop()
