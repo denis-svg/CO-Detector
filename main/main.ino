@@ -5,7 +5,7 @@
 
 #define BOT_TOKEN "6997061084:AAFeIqDFbySFbdmjx4PhvU188GvOah4HUwc"
 
-int pinIN = 36, pinMOSFET = 19, pinButton = 34, pinBuzzer = 5, pinLED = 18,
+int pinIN = 36, pinMOSFET = 33, pinButton = 25, pinBuzzer = 32, pinLED = 26,
     maxVoltage = 5, bitRes = 1023;
 void alert(int ppm);
 WiFiManager wifi;

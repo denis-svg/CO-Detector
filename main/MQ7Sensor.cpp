@@ -1,15 +1,15 @@
 #include "MQ7Sensor.h"
 
-// #define LOW_DURATION 90000
-// #define HIGH_DURATION 60000
-#define LOW_DURATION 9000
-#define HIGH_DURATION 6000
+#define LOW_DURATION 90000
+#define HIGH_DURATION 60000
+// #define LOW_DURATION 9000
+// #define HIGH_DURATION 6000
 
 MQ7Sensor::MQ7Sensor(int pinIN, int pinMOSFET, int pinButton, int pinBuzzer,
                      int pinLED, int maxVoltage, int bitRes, void (*alert)(int))
     : pinIN(pinIN), pinMOSFET(pinMOSFET), pinButton(pinButton),
-      pinBuzzer(pinBuzzer), pinLED(pinLED), maxVoltage(maxVoltage), bitRes(bitRes), alert(alert)
-{
+      pinBuzzer(pinBuzzer), pinLED(pinLED), maxVoltage(maxVoltage),
+      bitRes(bitRes), alert(alert) {
   pinMode(pinIN, INPUT);
   pinMode(pinMOSFET, OUTPUT);
   pinMode(pinLED, OUTPUT);
@@ -69,13 +69,11 @@ void MQ7Sensor::cycle_voltage()
   prev_t = t;
 }
 
-void MQ7Sensor::tick()
-{
+void MQ7Sensor::tick() {
   cycle_voltage();
   print_sensor();
 
-  if (digitalRead(pinButton) == HIGH)
-  {
+  if (digitalRead(pinButton) == LOW) {
     noTone(pinBuzzer);
     digitalWrite(pinLED, LOW);
   }

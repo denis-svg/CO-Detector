@@ -3,8 +3,7 @@
 
 #include <Arduino.h>
 
-class MQ7Sensor
-{
+class MQ7Sensor {
 private:
   void print_sensor();
   void cycle_voltage();
@@ -26,7 +25,7 @@ public:
   // duration in minutes to silence the buzzer for
   // after pressing the button when the alarm was on
   int silencedDuration = 5;
-  const int WARNING_PPM = 0;
+  const int WARNING_PPM = 99999;
 };
 
 #endif
