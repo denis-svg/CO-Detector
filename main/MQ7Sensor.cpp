@@ -2,8 +2,6 @@
 
 #define LOW_DURATION 90000
 #define HIGH_DURATION 60000
-// #define LOW_DURATION 9000
-// #define HIGH_DURATION 6000
 
 MQ7Sensor::MQ7Sensor(int pinIN, int pinMOSFET, int pinButton, int pinBuzzer,
                      int pinLED, int maxVoltage, int bitRes, void (*alert)(int))
@@ -31,13 +29,13 @@ void MQ7Sensor::print_sensor()
   prev_t = t;
 }
 
-void MQ7Sensor::cycle_voltage()
-{
+void MQ7Sensor::cycle_voltage() {
   static bool high = false;
   static unsigned long prev_t = 0;
 
   unsigned long t = millis();
-  if ((high && (t - prev_t < LOW_DURATION)) || (!high && (t - prev_t < HIGH_DURATION)))
+  if ((high && (t - prev_t < LOW_DURATION)) ||
+      (!high && (t - prev_t < HIGH_DURATION)))
     return;
   high = !high;
 
@@ -47,20 +45,20 @@ void MQ7Sensor::cycle_voltage()
   Serial.print("Transitioned to cycle: ");
   Serial.println(high);
 
-  if (high)
-  { // just transitioned to HIGH, last value shows true PPM
-    // TODO compute ppm from sensor voltage
-    ppm = analogRead(pinIN);
+  if (high) { // just transitioned to HIGH, last value shows true PPM
+    int VL = analogRead(pinIN);
+    // formula extracted from the datasheet by Sparkfun:
+    // https://learn.sparkfun.com/tutorials/hazardous-gas-monitor
+    ppm = 3.027 * exp(1.0698 * (VL * maxVoltage / bitRes));
+    Serial.print(">ppm:");
+    Serial.println(ppm);
 
-    if (ppm >= WARNING_PPM)
-    {
+    if (ppm >= WARNING_PPM) {
       Serial.println("high ppm ");
       tone(pinBuzzer, 2000);
       digitalWrite(pinLED, HIGH);
       alert(ppm);
-    }
-    else
-    {
+    } else {
       noTone(pinBuzzer);
       digitalWrite(pinLED, LOW);
     }
