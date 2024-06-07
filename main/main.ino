@@ -3,6 +3,11 @@
 #include "WifiManager.h"
 #include <BluetoothSerial.h>
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
+#define BLINK_GPIO 2
+
 #define BOT_TOKEN "6997061084:AAFeIqDFbySFbdmjx4PhvU188GvOah4HUwc"
 
 int pinIN = 36, pinMOSFET = 33, pinButton = 25, pinBuzzer = 32, pinLED = 26,
@@ -60,17 +65,30 @@ void setup() {
   startupDiagnostic();
 
   SerialBT.begin("ESP32-BT");
-  Serial.println(
-      "Setup complete. Waiting for WiFi credentials via Bluetooth...");
+  Serial.println("Bluetooth started. Waiting for WiFi credentials...");
+
+  xTaskCreate(&MQ7_task, "MQ7_task", 2048, NULL, 1, NULL);
+  xTaskCreate(&Telegram_task, "Telegram_task", 8192, NULL, 1, NULL);
 }
 
-void loop() {
-  if (wifi.connected()) {
-    bot.tick();
-  } else {
-    tryBluetooth();
+void loop() {}
+
+void MQ7_task(void *pvParameter) {
+  while (1) {
+    mq7.tick();
+    vTaskDelay(100 / portTICK_RATE_MS);
   }
-  mq7.tick();
+}
+
+void Telegram_task(void *pvParameter) {
+  while (1) {
+    if (wifi.connected()) {
+      bot.tick();
+    } else {
+      tryBluetooth();
+    }
+    vTaskDelay(100 / portTICK_RATE_MS);
+  }
 }
 
 void tryBluetooth() {

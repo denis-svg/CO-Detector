@@ -16,36 +16,34 @@ public:
     disconnect();
   }
 
-  bool connect(char *ssid, char *password)
-  {
+  bool connect(char *ssid, char *password) {
     Serial.println();
 
     // attempt to connect to Wifi network:
     Serial.print("Connecting to Wifi SSID ");
     Serial.print(ssid);
     WiFi.begin(ssid, password);
-    _client.setCACert(TELEGRAM_CERTIFICATE_ROOT); // Add root certificate for api.telegram.org
+    _client.setCACert(
+        TELEGRAM_CERTIFICATE_ROOT); // Add root certificate for api.telegram.org
 
     int retries = 0;
-    while (WiFi.status() != WL_CONNECTED && retries < MAX_WIFI_RETRIES)
-    {
-      Serial.print(".");
+    while (WiFi.status() != WL_CONNECTED && retries < MAX_WIFI_RETRIES) {
       delay(100);
       retries += 1;
     }
 
-    if (connected())
-    {
-      Serial.print("\nWiFi connected. IP address: ");
-      Serial.println(WiFi.localIP());
-      configTime(0, 0, "pool.ntp.org"); // get UTC time via NTP
-      return true;
+    if (!connected()) {
+      Serial.print("WiFi connection failed.");
+      return false;
     }
-    return false;
+    Serial.print("\nWiFi connected. IP address: ");
+    Serial.println(WiFi.localIP());
+    configTime(0, 0, "pool.ntp.org"); // get UTC time via NTP
+    return true;
   }
 
-  void disconnect()
-  {
+  void disconnect() {
+    WiFi.disconnect();
     Serial.println("WiFi disconnected.");
   }
 
@@ -61,7 +59,7 @@ public:
 
 private:
   WiFiClientSecure _client;
-  static const int MAX_WIFI_RETRIES = 100;
+  static const int MAX_WIFI_RETRIES = 300;
 };
 
 #endif
