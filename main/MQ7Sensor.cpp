@@ -34,12 +34,11 @@ void MQ7Sensor::cycle_voltage() {
 
   digitalWrite(pinMOSFET, high ? HIGH : LOW);
   Serial.print(">sensor:");
-  Serial.println(1023); // draw a line on the plot to show transition
   Serial.print("Transitioned to cycle: ");
-  Serial.println(high);
+  Serial.println(high ? "low (1.5V)" : "high (5V)");
 
   if (high) { // just transitioned to HIGH, last value shows true PPM
-    int VL = analogRead(pinIN);
+    float VL = analogRead(pinIN);
     // formula extracted from the datasheet by Sparkfun:
     // https://learn.sparkfun.com/tutorials/hazardous-gas-monitor
     ppm = 3.027 * exp(1.0698 * (VL * maxVoltage / bitRes));

@@ -28,7 +28,7 @@ public:
   // duration in minutes to silence the buzzer for
   // after pressing the button when the alarm was on
   int silencedDuration = 5;
-  const int WARNING_PPM = 99999;
+  const int WARNING_PPM = 40;
 };
 
 #endif
