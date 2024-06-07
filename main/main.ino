@@ -7,18 +7,58 @@
 
 int pinIN = 36, pinMOSFET = 33, pinButton = 25, pinBuzzer = 32, pinLED = 26,
     maxVoltage = 5, bitRes = 4096;
+
 void alert(int ppm);
+
 WiFiManager wifi;
+Button btn = Button(pinButton);
 MQ7Sensor mq7(pinIN, pinMOSFET, pinButton, pinBuzzer, pinLED, maxVoltage,
               bitRes, alert);
 TelegramBot bot(mq7, BOT_TOKEN, wifi.getClient());
-
 BluetoothSerial SerialBT;
 void readBluetoothInput(const char *prompt, char *input, int inputSize);
 bool restarting = true;
 
+void startupDiagnostic() {
+  unsigned long btn_down_t = 0;
+  Serial.println("Hold button for two seconds to test components.");
+
+  while (1) {
+    btn.poll();
+    if (btn.stateJustChanged && btn.pressed) {
+      btn_down_t = millis();
+    }
+    unsigned long hold_t = millis() - btn_down_t;
+    if (hold_t > 2000 && btn.pressed) {
+      tone(pinBuzzer, 2000);
+      delay(100);
+      noTone(pinBuzzer);
+      delay(100);
+      tone(pinBuzzer, 2000);
+      delay(100);
+      noTone(pinBuzzer);
+      digitalWrite(pinLED, LOW);
+
+      Serial.println("Startup diagnostics finished.");
+      return;
+    }
+    if (btn.pressed) {
+      digitalWrite(pinLED, HIGH);
+    } else {
+      digitalWrite(pinLED, LOW);
+    }
+  }
+}
+
 void setup() {
   Serial.begin(9600);
+  pinMode(pinIN, INPUT);
+  pinMode(pinMOSFET, OUTPUT);
+  pinMode(pinLED, OUTPUT);
+  pinMode(pinBuzzer, OUTPUT);
+
+  startupDiagnostic();
+
   SerialBT.begin("ESP32-BT");
   Serial.println(
       "Setup complete. Waiting for WiFi credentials via Bluetooth...");

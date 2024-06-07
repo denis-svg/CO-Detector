@@ -1,6 +1,7 @@
 #ifndef MQ7SENSOR_H
 #define MQ7SENSOR_H
 
+#include "Button.h"
 #include <Arduino.h>
 
 class MQ7Sensor {
@@ -9,13 +10,15 @@ private:
   void cycle_voltage();
 
 public:
-  MQ7Sensor(int pinIN, int pinMOSFET, int pinButton, int pinBuzzer, int pinLED,
+  MQ7Sensor(int pinIN, int pinMOSFET, Button btn, int pinBuzzer, int pinLED,
             int maxVoltage, int bitRes, void (*alert)(int));
   int pinIN;
   int pinMOSFET;
   int pinButton;
   int pinBuzzer;
   int pinLED;
+  Button btn;
+
   int maxVoltage;
   int bitRes;
   void (*alert)(int);

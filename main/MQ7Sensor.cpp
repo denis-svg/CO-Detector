@@ -3,17 +3,10 @@
 #define LOW_DURATION 90000
 #define HIGH_DURATION 60000
 
-MQ7Sensor::MQ7Sensor(int pinIN, int pinMOSFET, int pinButton, int pinBuzzer,
+MQ7Sensor::MQ7Sensor(int pinIN, int pinMOSFET, Button btn, int pinBuzzer,
                      int pinLED, int maxVoltage, int bitRes, void (*alert)(int))
-    : pinIN(pinIN), pinMOSFET(pinMOSFET), pinButton(pinButton),
-      pinBuzzer(pinBuzzer), pinLED(pinLED), maxVoltage(maxVoltage),
-      bitRes(bitRes), alert(alert) {
-  pinMode(pinIN, INPUT);
-  pinMode(pinMOSFET, OUTPUT);
-  pinMode(pinLED, OUTPUT);
-  pinMode(pinBuzzer, OUTPUT);
-  pinMode(pinButton, INPUT_PULLUP);
-}
+    : pinIN(pinIN), pinMOSFET(pinMOSFET), btn(btn), pinBuzzer(pinBuzzer),
+      pinLED(pinLED), maxVoltage(maxVoltage), bitRes(bitRes), alert(alert) {}
 
 void MQ7Sensor::print_sensor()
 {
@@ -70,8 +63,9 @@ void MQ7Sensor::cycle_voltage() {
 void MQ7Sensor::tick() {
   cycle_voltage();
   print_sensor();
+  btn.poll();
 
-  if (digitalRead(pinButton) == LOW) {
+  if (btn.pressed) {
     noTone(pinBuzzer);
     digitalWrite(pinLED, LOW);
   }
