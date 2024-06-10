@@ -3,7 +3,10 @@
 void Button::poll() {
   stateJustChanged = false;
   prev_down = curr_down;
+  pinMode(pin, INPUT_PULLUP);
   curr_down = !digitalRead(pin);
+
+  // TODO fix input pullup on pin 25 https://www.esp32.com/viewtopic.php?t=17431
 
   // If a button has been in the same state the last two ticks,
   // we assume it has settled and isn't bouncing anymore.

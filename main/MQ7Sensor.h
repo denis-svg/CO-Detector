@@ -2,6 +2,7 @@
 #define MQ7SENSOR_H
 
 #include "Button.h"
+#include "LED.h"
 #include <Arduino.h>
 
 class MQ7Sensor {
@@ -10,25 +11,20 @@ private:
   void cycle_voltage();
 
 public:
-  MQ7Sensor(int pinIN, int pinMOSFET, Button btn, int pinBuzzer, int pinLED,
-            int maxVoltage, int bitRes, void (*alert)(int));
+  MQ7Sensor(int pinIN, int pinMOSFET, int pinBuzzer, int maxVoltage, int bitRes,
+            void (*handle_reading)(int));
   int pinIN;
   int pinMOSFET;
-  int pinButton;
   int pinBuzzer;
-  int pinLED;
-  Button btn;
 
   int maxVoltage;
   int bitRes;
-  void (*alert)(int);
+  void (*handle_reading)(int);
   void tick();
+  void take_reading();
+
   // last recorded PPM, can be max 2.5 minutes old
   float ppm;
-  // duration in minutes to silence the buzzer for
-  // after pressing the button when the alarm was on
-  int silencedDuration = 5;
-  const int WARNING_PPM = 40;
 };
 
 #endif

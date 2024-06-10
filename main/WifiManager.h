@@ -21,7 +21,7 @@ public:
 
     // attempt to connect to Wifi network:
     Serial.print("Connecting to Wifi SSID ");
-    Serial.print(ssid);
+    Serial.println(ssid);
     WiFi.begin(ssid, password);
     _client.setCACert(
         TELEGRAM_CERTIFICATE_ROOT); // Add root certificate for api.telegram.org
@@ -33,7 +33,7 @@ public:
     }
 
     if (!connected()) {
-      Serial.print("WiFi connection failed.");
+      Serial.println("WiFi connection failed.");
       return false;
     }
     Serial.print("\nWiFi connected. IP address: ");
