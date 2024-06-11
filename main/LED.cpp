@@ -6,6 +6,7 @@ void LED::toggle(bool state) {
 
   on = state;
   if (mode == steady || mode == flickering) {
+    pinMode(pin, OUTPUT);
     digitalWrite(pin, state ? HIGH : LOW);
   }
 }

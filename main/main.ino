@@ -43,7 +43,7 @@ void setup() {
   xTaskCreate(&MQ7_task, "MQ7_task", 4096, NULL, 1, NULL);
   xTaskCreate(&Telegram_task, "Telegram_task", 16384, NULL, 1, NULL);
 
-  led.mode = LED::flickering;
+  led.mode = LED::pulsating;
 }
 
 void loop() {}
